@@ -60,7 +60,7 @@ ea_gdp_19 <- ea_gdp [ , c('country_name', 'x2019')]
 ea_gdp_19[,'x2019']=round(ea_gdp_19[,'x2019'],2)
 
 ##Data Visualization of HE $ of GDP in 2019
-ggplot(ea_gdp_19,
+plot1 <- ggplot(ea_gdp_19,
        aes(x = reorder(country_name,-x2019), y= x2019, fill = reorder(country_name,-x2019)))+
   geom_bar(stat = 'identity',show.legend = FALSE)+
   scale_fill_manual(values = c("Kenya" = "#FF0000",
@@ -80,7 +80,11 @@ ggplot(ea_gdp_19,
        y = "")
 ```
 
-![](HE-GDP_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+``` r
+plot1
+```
+
+![](HE-GDP_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
 
 In 2019, health expenditure as a share of GDP for Kenya was 4.6 %.
 Between 2010 and 2019, health expenditure as a share of GDP in Kenya was
@@ -107,7 +111,7 @@ ea_gdp2 <- cbind(ea_gdp2, years)
 #Data Visualization
 myColours2 = c("#040c04", "#4d372c","#5cac94","#FF0000","#4d3ec0","#acc6d8",
                "#24a4d4", "#ca5cdd")
-ea_gdp2%>%
+plot2 <- ea_gdp2%>%
   mutate(isKenya = (country_name == "Kenya"))%>%
   ggplot(aes(x=years, y=gdp, color=country_name))+
   geom_line( aes (linetype = isKenya), size =1, alpha = 0.6)+
@@ -121,9 +125,11 @@ ea_gdp2%>%
   scale_color_manual(values = myColours2)
 ```
 
-![](HE-GDP_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+``` r
+plot2
+```
 
-Over the last few years, there has been a strain on global economy
-following the Covid-19 virus and now the Ukraine-Russia war. Such
-constraints forces the governments to cut down on spending, including
-health spending.
+![](HE-GDP_files/figure-gfm/unnamed-chunk-5-1.png)<!-- --> Over the last
+few years, there has been a strain on global economy following the
+Covid-19 virus and now the Ukraine-Russia war. Such constraints forces
+the governments to cut down on spending, including health spending.
