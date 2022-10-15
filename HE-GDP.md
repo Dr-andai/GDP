@@ -1,0 +1,129 @@
+Health Expenditure % GDP
+================
+David Andai
+10/15/2022
+
+When trying to figure out how to allocate our financial resources, we
+more often than not asses our expenses so as to develop a budget. Some
+items on the budget list end up having a bigger share of the portion
+depending on our various priorities. When it comes to matters health at
+a National level, we use the Current Health Expenditure as a share of
+GDP to provide an indication on the level of resources channeled to
+health relative to other uses.
+
+But what is GDP? Gross domestic product (GDP) is the standard measure of
+the value added created through the production of goods and services in
+a country during a certain period. (IMAGE)
+
+As GDP factors in the National outlook of the economy, health spending
+measures the final consumption of health care goods and services
+(i.e. current health expenditure). This includes personal health care
+(curative care, rehabilitative care, long-term care, ancillary services
+and medical goods) and collective services (prevention and public health
+services as well as health administration), but excluding spending on
+investments (OECD 2022).
+
+Health Expenditure as percentage of GDP Data
+
+``` r
+##Import and Cleaning Data Set
+setwd('C:/Users/user/Documents/R/GDP/GDP')
+he_gdp <- import('API_SH.XPD.CHEX.GD.ZS_DS2_en_csv_v2_4499032.csv')
+
+#Data Cleaning
+##reshape data frame 2009-2019 columns
+he_gdp2 <- he_gdp[-c(5:53)]
+names(he_gdp2) <- NULL
+names(he_gdp2) <- he_gdp2[1,]
+##remove first row and rename The Columns
+he_gdp2 <- he_gdp2 [-c(1),]
+he_gdp2 <- he_gdp2 %>%
+  janitor::clean_names()
+#delete empty columns
+he_gdp2 <- he_gdp2 [ , !names(he_gdp2)%in%
+                     c("country_code", "indicator_name", "indicator_code", "na", "x2020", "x2021")]
+```
+
+Health spending shows the importance of the health sector in the whole
+economy and indicates the societal priority which health is given
+measured in monetary terms (WHO). This analysis focuses how Kenya
+compares to its neighbours in the East Africa Community. The latest data
+entry is from 2019, while a look at a 10 year trend is assesd…….
+
+``` r
+#Obtain East Africa Countries
+ea_gdp <- he_gdp2 [he_gdp2$country_name %in% c("Kenya", "Tanzania", "Uganda",
+                "Rwanda", "Congo, Dem. Rep.", "Burundi", "South Sudan", "Ethiopia"),]
+#cleaning data
+ea_gdp_19 <- ea_gdp [ , c('country_name', 'x2019')]
+##round to 2 decimal places
+ea_gdp_19[,'x2019']=round(ea_gdp_19[,'x2019'],2)
+
+##Data Visualization of HE $ of GDP in 2019
+ggplot(ea_gdp_19,
+       aes(x = reorder(country_name,-x2019), y= x2019, fill = reorder(country_name,-x2019)))+
+  geom_bar(stat = 'identity',show.legend = FALSE)+
+  scale_fill_manual(values = c("Kenya" = "#FF0000",
+                               "Tanzania" = "#5cac94",
+                               "Uganda" = "#5cac94",
+                               "Rwanda"= "#5cac94", 
+                               "Congo, Dem. Rep."= "#5cac94", 
+                               "Burundi"= "#5cac94",
+                               "South Sudan"= "#5cac94",
+                               "Ethiopia"= "#5cac94"))+
+  theme_few()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))+
+  geom_text(aes(label = paste(format(x2019, nsmall = 2), "%")), vjust = -0.2)+
+  labs(title="Healthcare Expenditure as Percentage of GDP", 
+        subtitle ="In 2019 in EastAfrican Countries")+
+  labs(x = "",
+       y = "")
+```
+
+![](HE-GDP_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+
+In 2019, health expenditure as a share of GDP for Kenya was 4.6 %.
+Between 2010 and 2019, health expenditure as a share of GDP in Kenya was
+decreasing on average by 2.44% each year, although before that, it grew
+from 4.6 % in 2000 to 6.1 % in 2010.
+
+``` r
+#Trend of Healthcare Expenditure % of GDP in 10years
+
+#Pivot data;  Wide-to-long
+##pivot_data
+ea_gdp2 <- ea_gdp%>%
+  pivot_longer(
+    cols = "x2009":"x2019",
+    names_to = "year",
+    values_to = "gdp"
+  )
+
+#Convert year column to numeric
+years <- as.numeric(str_match(ea_gdp2$year,"[0-9]+"))
+
+ea_gdp2 <- cbind(ea_gdp2, years)
+
+#Data Visualization
+myColours2 = c("#040c04", "#4d372c","#5cac94","#FF0000","#4d3ec0","#acc6d8",
+               "#24a4d4", "#ca5cdd")
+ea_gdp2%>%
+  mutate(isKenya = (country_name == "Kenya"))%>%
+  ggplot(aes(x=years, y=gdp, color=country_name))+
+  geom_line( aes (linetype = isKenya), size =1, alpha = 0.6)+
+  labs (title = "East Africa Countires Health Expenditure  (% of GDP)",
+        y = "HE (% 0f GDP)",
+        x = "",
+        color = "Country")+
+  scale_x_continuous(breaks = 2009:2019)+
+  theme_few()+
+  scale_linetype_manual(values = c ("dashed", "solid"), guide ="none")+
+  scale_color_manual(values = myColours2)
+```
+
+![](HE-GDP_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+
+Over the last few years, there has been a strain on global economy
+following the Covid-19 virus and now the Ukraine-Russia war. Such
+constraints forces the governments to cut down on spending, including
+health spending.
