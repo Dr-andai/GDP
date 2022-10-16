@@ -26,39 +26,6 @@ investments (OECD 2022).
 Health Expenditure as percentage of GDP Data
 
 ``` r
-##Import and Cleaning Data Set
-setwd('C:/Users/user/Documents/R/GDP/GDP')
-he_gdp <- import('API_SH.XPD.CHEX.GD.ZS_DS2_en_csv_v2_4499032.csv')
-
-#Data Cleaning
-##reshape data frame 2009-2019 columns
-he_gdp2 <- he_gdp[-c(5:53)]
-names(he_gdp2) <- NULL
-names(he_gdp2) <- he_gdp2[1,]
-##remove first row and rename The Columns
-he_gdp2 <- he_gdp2 [-c(1),]
-he_gdp2 <- he_gdp2 %>%
-  janitor::clean_names()
-#delete empty columns
-he_gdp2 <- he_gdp2 [ , !names(he_gdp2)%in%
-                     c("country_code", "indicator_name", "indicator_code", "na", "x2020", "x2021")]
-```
-
-Health spending shows the importance of the health sector in the whole
-economy and indicates the societal priority which health is given
-measured in monetary terms (WHO). This analysis focuses how Kenya
-compares to its neighbours in the East Africa Community. The latest data
-entry is from 2019, while a look at a 10 year trend is assesd…….
-
-``` r
-#Obtain East Africa Countries
-ea_gdp <- he_gdp2 [he_gdp2$country_name %in% c("Kenya", "Tanzania", "Uganda",
-                "Rwanda", "Congo, Dem. Rep.", "Burundi", "South Sudan", "Ethiopia"),]
-#cleaning data
-ea_gdp_19 <- ea_gdp [ , c('country_name', 'x2019')]
-##round to 2 decimal places
-ea_gdp_19[,'x2019']=round(ea_gdp_19[,'x2019'],2)
-
 ##Data Visualization of HE $ of GDP in 2019
 plot1 <- ggplot(ea_gdp_19,
        aes(x = reorder(country_name,-x2019), y= x2019, fill = reorder(country_name,-x2019)))+
@@ -80,11 +47,17 @@ plot1 <- ggplot(ea_gdp_19,
        y = "")
 ```
 
+Health spending shows the importance of the health sector in the whole
+economy and indicates the societal priority which health is given
+measured in monetary terms (WHO). This analysis focuses how Kenya
+compares to its neighbours in the East Africa Community. The latest data
+entry is from 2019, while a look at a 10 year trend is assesd…….
+
 ``` r
 plot1
 ```
 
-![](HE-GDP_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![](HE-GDP_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
 
 In 2019, health expenditure as a share of GDP for Kenya was 4.6 %.
 Between 2010 and 2019, health expenditure as a share of GDP in Kenya was
@@ -92,22 +65,6 @@ decreasing on average by 2.44% each year, although before that, it grew
 from 4.6 % in 2000 to 6.1 % in 2010.
 
 ``` r
-#Trend of Healthcare Expenditure % of GDP in 10years
-
-#Pivot data;  Wide-to-long
-##pivot_data
-ea_gdp2 <- ea_gdp%>%
-  pivot_longer(
-    cols = "x2009":"x2019",
-    names_to = "year",
-    values_to = "gdp"
-  )
-
-#Convert year column to numeric
-years <- as.numeric(str_match(ea_gdp2$year,"[0-9]+"))
-
-ea_gdp2 <- cbind(ea_gdp2, years)
-
 #Data Visualization
 myColours2 = c("#040c04", "#4d372c","#5cac94","#FF0000","#4d3ec0","#acc6d8",
                "#24a4d4", "#ca5cdd")
@@ -129,7 +86,7 @@ plot2 <- ea_gdp2%>%
 plot2
 ```
 
-![](HE-GDP_files/figure-gfm/unnamed-chunk-5-1.png)<!-- --> Over the last
+![](HE-GDP_files/figure-gfm/unnamed-chunk-7-1.png)<!-- --> Over the last
 few years, there has been a strain on global economy following the
 Covid-19 virus and now the Ukraine-Russia war. Such constraints forces
 the governments to cut down on spending, including health spending.

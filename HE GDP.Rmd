@@ -25,7 +25,7 @@ library(dplyr)
 ```
 
 Health Expenditure as percentage of GDP Data
-```{r message=FALSE, warning=FALSE}
+```{r include=FALSE}
 ##Import and Cleaning Data Set
 setwd('C:/Users/user/Documents/R/GDP/GDP')
 he_gdp <- import('API_SH.XPD.CHEX.GD.ZS_DS2_en_csv_v2_4499032.csv')
@@ -45,9 +45,8 @@ he_gdp2 <- he_gdp2 [ , !names(he_gdp2)%in%
 
 ```
 
-Health spending shows the importance of the health sector in the whole economy and indicates the societal priority which health is given measured in monetary terms (WHO). This analysis focuses how Kenya compares to its neighbours in the East Africa Community. The latest data entry is from 2019, while a look at a 10 year trend is assesd....... 
 
-```{r}
+```{r include=FALSE}
 #Obtain East Africa Countries
 ea_gdp <- he_gdp2 [he_gdp2$country_name %in% c("Kenya", "Tanzania", "Uganda",
                 "Rwanda", "Congo, Dem. Rep.", "Burundi", "South Sudan", "Ethiopia"),]
@@ -55,7 +54,9 @@ ea_gdp <- he_gdp2 [he_gdp2$country_name %in% c("Kenya", "Tanzania", "Uganda",
 ea_gdp_19 <- ea_gdp [ , c('country_name', 'x2019')]
 ##round to 2 decimal places
 ea_gdp_19[,'x2019']=round(ea_gdp_19[,'x2019'],2)
+```
 
+```{r}
 ##Data Visualization of HE $ of GDP in 2019
 plot1 <- ggplot(ea_gdp_19,
        aes(x = reorder(country_name,-x2019), y= x2019, fill = reorder(country_name,-x2019)))+
@@ -76,14 +77,14 @@ plot1 <- ggplot(ea_gdp_19,
   labs(x = "",
        y = "")
 ```
-
+Health spending shows the importance of the health sector in the whole economy and indicates the societal priority which health is given measured in monetary terms (WHO). This analysis focuses how Kenya compares to its neighbours in the East Africa Community. The latest data entry is from 2019, while a look at a 10 year trend is assesd....... 
 ```{r dev = "png"}
 plot1
 ```
 
 In 2019, health expenditure as a share of GDP for Kenya was 4.6 %. Between 2010 and 2019, health expenditure as a share of GDP in Kenya was decreasing on average by 2.44% each year, although before that, it grew from 4.6 % in 2000 to 6.1 % in 2010.
 
-```{r message=FALSE, warning=FALSE}
+```{r include=FALSE}
 #Trend of Healthcare Expenditure % of GDP in 10years
 
 #Pivot data;  Wide-to-long
@@ -99,7 +100,9 @@ ea_gdp2 <- ea_gdp%>%
 years <- as.numeric(str_match(ea_gdp2$year,"[0-9]+"))
 
 ea_gdp2 <- cbind(ea_gdp2, years)
+```
 
+```{r message=FALSE, warning=FALSE}
 #Data Visualization
 myColours2 = c("#040c04", "#4d372c","#5cac94","#FF0000","#4d3ec0","#acc6d8",
                "#24a4d4", "#ca5cdd")
