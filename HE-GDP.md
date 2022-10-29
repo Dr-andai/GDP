@@ -36,13 +36,12 @@ plot1 <- ggplot(ea_gdp_19,
                                "Rwanda"= "#5cac94", 
                                "Congo, Dem. Rep."= "#5cac94", 
                                "Burundi"= "#5cac94",
-                               "South Sudan"= "#5cac94",
-                               "Ethiopia"= "#5cac94"))+
+                               "South Sudan"= "#5cac94"))+
   theme_few()+
   theme(axis.text.x = element_text(angle = 45, hjust = 1))+
   geom_text(aes(label = paste(format(x2019, nsmall = 2), "%")), vjust = -0.2)+
   labs(title="Healthcare Expenditure as Percentage of GDP", 
-        subtitle ="In 2019 in EastAfrican Countries")+
+        subtitle ="In 2019 in East African Community")+
   labs(x = "",
        y = "")
 ```
@@ -50,8 +49,8 @@ plot1 <- ggplot(ea_gdp_19,
 Health spending shows the importance of the health sector in the whole
 economy and indicates the societal priority which health is given
 measured in monetary terms (WHO). This analysis focuses how Kenya
-compares to its neighbours in the East Africa Community. The latest data
-entry is from 2019, while a look at a 10 year trend is assesd…….
+compares to its neighbours in the East African Community. The latest
+data entry is from 2019, while a look at a 10 year trend is assesd…….
 
 ``` r
 plot1
@@ -66,13 +65,13 @@ from 4.6 % in 2000 to 6.1 % in 2010.
 
 ``` r
 #Data Visualization
-myColours2 = c("#040c04", "#4d372c","#5cac94","#FF0000","#4d3ec0","#acc6d8",
-               "#24a4d4", "#ca5cdd")
+myColours2 = c("#040c04", "#4d372c","#FF0000","#5cac94",
+               "#24a4d4", "#ca5cdd","#4d3ec0")
 plot2 <- ea_gdp2%>%
   mutate(isKenya = (country_name == "Kenya"))%>%
   ggplot(aes(x=years, y=gdp, color=country_name))+
   geom_line( aes (linetype = isKenya), size =1, alpha = 0.6)+
-  labs (title = "East Africa Countires Health Expenditure  (% of GDP)",
+  labs (title = "East African Community Health Expenditure  (% of GDP)",
         y = "HE (% 0f GDP)",
         x = "",
         color = "Country")+
